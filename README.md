@@ -5,10 +5,11 @@ Convert java to kotlin as usual and just run script in the idea project dir. VCS
 Converted files will be committed and history is preserved (only and only converted files will be committed — working directory can be dirty).
 
 What script does:
-1) kotlin file renamed to java file (foo.kt -> foo.java).
-2) first commit.
-3) foo.java renamed back to foo.kt.
-4) second (and last) commit.
+
+1. kotlin file renamed to java file (foo.kt -> foo.java).
+2. first commit.
+3. foo.java renamed back to foo.kt.
+4. second (and last) commit.
 
 Please note — only and only converted files will be committed, so, you should commit another changed files (e.g. if some java file modified to use kotlin API).
 
