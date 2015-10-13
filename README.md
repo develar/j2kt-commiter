@@ -1,3 +1,5 @@
+[Latest release](https://github.com/develar/j2kt-commiter/releases/latest)
+
 We are not monkey to do it by hand. 
 
 Convert java to kotlin as usual and run script in the idea project dir (`java -jar j2kt-commiter.jar`). VCS mappings are used to support several repositories.
