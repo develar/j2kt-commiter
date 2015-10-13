@@ -16,14 +16,16 @@ private val vcsConfigRelativePath = ".idea${File.separatorChar}vcs.xml"
 private val DOT_KT = ".kt"
 
 fun main(args: Array<String>) {
-  val dryRun = args.getOrNull(1)?.toBoolean() ?: false
-  var projectDir = args.firstOrNull()
+  val dryRun = args.getOrNull(0)?.toBoolean() ?: false
+  var projectDir = args.getOrNull(1) ?: System.getProperty("user.dir")
   val vcsFile = if (projectDir.isNullOrEmpty()) {
     File(vcsConfigRelativePath)
-  } else {
+  }
+  else {
     projectDir = expandUserHome(projectDir!!)
     File(projectDir, vcsConfigRelativePath)
   }
+
   if (!vcsFile.isFile) {
     System.err.println("$vcsConfigRelativePath not found, please ensure that you run script in the project dir")
     return
@@ -56,10 +58,12 @@ fun main(args: Array<String>) {
 }
 
 private fun processRepository(dryRun: Boolean, workingDir: File) {
+  System.out.println("Repository ${ansiBold(workingDir.path)}")
 
   val git = Git(FileRepositoryBuilder().setWorkTree(workingDir).setMustExist(true).readEnvironment().build())
   val javaToKotlinFileMap = renameKotlinToJavaAndCommit(dryRun, git, workingDir)
   if (javaToKotlinFileMap.isEmpty()) {
+    System.out.println("\u001B[32mSkip, no converted files\u001B[0m")
     return
   }
 
@@ -85,8 +89,6 @@ private fun processRepository(dryRun: Boolean, workingDir: File) {
 }
 
 private fun renameKotlinToJavaAndCommit(dryRun: Boolean, git: Git, workingDir: File): List<Pair<FileInfo, FileInfo>> {
-  var repoHeaderPrinted = false
-  var repoHeaderPrinted1 = repoHeaderPrinted
   val status = git.status().call()
   val removed = status.removed
   val added = status.added
@@ -99,11 +101,6 @@ private fun renameKotlinToJavaAndCommit(dryRun: Boolean, git: Git, workingDir: F
     val javaCounterpartPath = "${path.substring(0, path.length() - DOT_KT.length())}.java"
     if (!removed.contains(javaCounterpartPath)) {
       continue
-    }
-
-    if (!repoHeaderPrinted1) {
-      repoHeaderPrinted1 = true
-      System.out.println("Repository ${ansiBold(workingDir.path)}")
     }
 
     System.out.println("rename ${coloredPath(path)} to ${ansiBold(getFileName(javaCounterpartPath))}")
