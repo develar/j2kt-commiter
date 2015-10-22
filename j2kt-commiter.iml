@@ -10,5 +10,6 @@
     <orderEntry type="library" name="KotlinJavaRuntime" level="project" />
     <orderEntry type="library" name="jgit" level="project" />
     <orderEntry type="library" name="slf4j" level="project" />
+    <orderEntry type="library" name="jansi" level="project" />
   </component>
 </module>
